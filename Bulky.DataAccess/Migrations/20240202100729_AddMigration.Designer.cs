@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240202072830_AddProducts")]
-    partial class AddProducts
+    [Migration("20240202100729_AddMigration")]
+    partial class AddMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,12 @@ namespace Bulky.DataAccess.Migrations
                             Id = 3,
                             DisplayOrder = 3,
                             Name = "History"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DisplayOrder = 4,
+                            Name = "Oh BOy"
                         });
                 });
 
@@ -76,6 +82,9 @@ namespace Bulky.DataAccess.Migrations
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -103,6 +112,8 @@ namespace Bulky.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Product");
 
                     b.HasData(
@@ -110,6 +121,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 1,
                             Author = "Billy Spark",
+                            CategoryId = 1,
                             Description = "present vitae solades livero.",
                             ISBN = "SWD9999001",
                             ListPrice = 99.0,
@@ -122,6 +134,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 2,
                             Author = "Ron Parker",
+                            CategoryId = 2,
                             Description = "present vitae solades livero.",
                             ISBN = "SOTJ1111111101",
                             ListPrice = 30.0,
@@ -134,6 +147,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 3,
                             Author = "Laura Phanton",
+                            CategoryId = 3,
                             Description = "present vitae solades livero.",
                             ISBN = "FOT000000001",
                             ListPrice = 25.0,
@@ -142,6 +156,17 @@ namespace Bulky.DataAccess.Migrations
                             Price50 = 22.0,
                             Title = "Leaves and Wonders"
                         });
+                });
+
+            modelBuilder.Entity("Bulky.Models.Product", b =>
+                {
+                    b.HasOne("Bulky.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
